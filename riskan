@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+from textwrap import dedent
+import runpy
+import sys
+import os
+
+try:
+    from venvstarter import ignite
+except ImportError:
+    sys.exit(dedent(f"""
+    You are missing the one dependency needed for this to work. Run the following
+
+    > {sys.executable} -m pip install venvstarter
+    """))
+
+this_dir = os.path.abspath(os.path.dirname(__file__))
+
+riskan_version = runpy.run_path(os.path.join(this_dir, "code", "riskan", "__init__.py"))["VERSION"]
+
+deps = [
+    f"-e file:{this_dir}/code#egg=riskan=={riskan_version}"
+    ]
+
+
+ignite(__file__, "riskan"
+    , deps = deps
+    , min_python_version = 3.8
+    )
